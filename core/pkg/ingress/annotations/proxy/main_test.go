@@ -67,13 +67,14 @@ type mockBackend struct {
 
 func (m mockBackend) GetDefaultBackend() defaults.Backend {
 	return defaults.Backend{
-		UpstreamFailTimeout: 1,
-		ProxyConnectTimeout: 10,
-		ProxySendTimeout:    15,
-		ProxyReadTimeout:    20,
-		ProxyBufferSize:     "10k",
-		ProxyBodySize:       "3k",
-		ProxyNextUpstream:   "error",
+		UpstreamFailTimeout:   1,
+		ProxyConnectTimeout:   10,
+		ProxySendTimeout:      15,
+		ProxyReadTimeout:      20,
+		ProxyBufferSize:       "10k",
+		ProxyBodySize:         "3k",
+		ProxyNextUpstream:     "error",
+		ProxyRequestBuffering: "on",
 	}
 }
 
@@ -87,6 +88,7 @@ func TestProxy(t *testing.T) {
 	data[bufferSize] = "1k"
 	data[bodySize] = "2k"
 	data[nextUpstream] = "off"
+	data[requestBuffering] = "off"
 	ing.SetAnnotations(data)
 
 	i, err := NewParser(mockBackend{}).Parse(ing)
@@ -114,6 +116,9 @@ func TestProxy(t *testing.T) {
 	}
 	if p.NextUpstream != "off" {
 		t.Errorf("expected off as next-upstream but returned %v", p.NextUpstream)
+	}
+	if p.RequestBuffering != "off" {
+		t.Errorf("expected off as request-buffering but returned %v", p.RequestBuffering)
 	}
 }
 
@@ -149,4 +154,8 @@ func TestProxyWithNoAnnotation(t *testing.T) {
 	if p.NextUpstream != "error" {
 		t.Errorf("expected error as next-upstream but returned %v", p.NextUpstream)
 	}
+	if p.RequestBuffering != "on" {
+		t.Errorf("expected on as request-buffering but returned %v", p.RequestBuffering)
+	}
+
 }
