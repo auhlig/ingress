@@ -38,7 +38,7 @@ const (
 // Configuration returns the proxy timeout to use in the upstream server/s
 type Configuration struct {
 	BodySize         string `json:"bodySize"`
-	ConnectTimeout   int    `json:"conectTimeout"`
+	ConnectTimeout   int    `json:"connectTimeout"`
 	SendTimeout      int    `json:"sendTimeout"`
 	ReadTimeout      int    `json:"readTimeout"`
 	BufferSize       string `json:"bufferSize"`
